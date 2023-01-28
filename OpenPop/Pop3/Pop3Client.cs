@@ -360,6 +360,7 @@ namespace OpenPop.Pop3
         /// <exception cref="PopServerException">If the server responded with -ERR</exception>
         private void AuthenticateUsingOauth2(string username, string password)
         {
+            //https://learn.microsoft.com/en-gb/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth
             string auth = "user=" + username + "\u0001auth=Bearer " + password + "\u0001\u0001";
             string authToken = Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(auth));
             SendCommand("AUTH XOAUTH2");

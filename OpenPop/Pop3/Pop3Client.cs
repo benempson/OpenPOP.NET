@@ -331,6 +331,10 @@ namespace OpenPop.Pop3
 					case AuthenticationMethod.CramMd5:
 						AuthenticateUsingCramMd5(username, password);
 						break;
+
+					case AuthenticationMethod.OAuth2:
+						AuthenticateUsingOauth2(username, password);
+						break;
 				}
 			} catch(PopServerException e)
 			{
@@ -348,13 +352,29 @@ namespace OpenPop.Pop3
 			State = ConnectionState.Transaction;
 		}
 
-		/// <summary>
-		/// Authenticates a user towards the POP server using the USER and PASSWORD commands
-		/// </summary>
-		/// <param name="username">The username</param>
-		/// <param name="password">The user password</param>
-		/// <exception cref="PopServerException">If the server responded with -ERR</exception>
-		private void AuthenticateUsingUserAndPassword(string username, string password)
+        /// <summary>
+        /// Authenticates a user towards the POP server using the Oauth2 commands
+        /// </summary>
+        /// <param name="username">The username</param>
+        /// <param name="password">The Oauth2 token</param>
+        /// <exception cref="PopServerException">If the server responded with -ERR</exception>
+        private void AuthenticateUsingOauth2(string username, string password)
+        {
+            string auth = "user=" + username + "\u0001auth=Bearer " + password + "\u0001\u0001";
+            string authToken = Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(auth));
+            SendCommand("AUTH XOAUTH2");
+            SendCommand(authToken);
+
+            // Authentication was successful if no exceptions thrown before getting here
+        }
+
+        /// <summary>
+        /// Authenticates a user towards the POP server using the USER and PASSWORD commands
+        /// </summary>
+        /// <param name="username">The username</param>
+        /// <param name="password">The user password</param>
+        /// <exception cref="PopServerException">If the server responded with -ERR</exception>
+        private void AuthenticateUsingUserAndPassword(string username, string password)
 		{
 			SendCommand("USER " + username);
 			SendCommand("PASS " + password);

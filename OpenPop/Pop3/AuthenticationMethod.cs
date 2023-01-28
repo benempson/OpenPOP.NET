@@ -37,6 +37,11 @@ namespace OpenPop.Pop3
 		/// Logs in the the POP3 server using CRAM-MD5 authentication scheme.<br/>
 		/// This in essence uses the MD5 hashing algorithm on the user password and a server challenge.
 		/// </summary>
-		CramMd5
+		CramMd5,
+
+		/// <summary>
+		/// Authenticates using the given OAuth2 Token
+		/// </summary>
+		OAuth2,
 	}
 }
